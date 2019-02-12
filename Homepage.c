@@ -5,6 +5,7 @@
 #include <conio.h>
 #include <ctype.h>
 #include <dos.h>
+#include <wchar.h>
 
 #define RETURNTIME 15
 
@@ -65,7 +66,7 @@ struct Book{
 	char Author[15];
 	int quantity;
 	int rack_no;
-	char *Category;
+	char *Category ;
 	struct DateTime issued_date;
 	struct DateTime duedate;
 };
@@ -85,6 +86,7 @@ int main(int argc, char *argv[]) {
 
 //function home for the home page to the user
 void home(void){
+  system("cls");
 	system("color 0A");
     
 	printf("\t Login into the System as : (Choose One)\n\t" );
@@ -173,7 +175,7 @@ void Librarian_home(void){
 	printf("\t 7:Return Books\n\t");
 	printf("\t 8:Log out \n");
 	Time();
-	printf("\t Enter your choice");
+	printf("\t Enter your choice: ");
 	scanf("%d",&choice);
 	
 	switch(choice){
@@ -204,9 +206,10 @@ void Librarian_home(void){
 		case 7:
 			break;
 		case 8:{
+			system("color 01");
 			system("cls");
 			
-			system("color 5B");
+			
 			printf("\t\t Successful Logout");
 			delay(3000); //delay for 5 seconds
 			exit(0);
@@ -243,6 +246,12 @@ void addbooks(void){
 	
 	system("cls");
 	fb =fopen("books.dat", "ab+");
+  if (fb==NULL) {
+	   printf("\n\t Failed to open books.dat\n");
+		 delay(3000);
+		 Librarian_home();
+	}
+	
 	if(getdata() ==1){
 		sample.Category = Categories[choice -1];
 		fseek(fb,0,SEEK_END); // moving the file to the end allow appending of the next file
@@ -275,10 +284,29 @@ int Time(void){
 
 //checking for the existence of the book in the Library
 int checkbook_id(int t){
-	rewind(fb);
-	while(fread(&sample,sizeof(sample),1,fb)==1)
-	if(sample.book_id)
-	return 0; // for existing book
+	fb = fopen("books.dat", "rb+");
+	if (fb == NULL) {
+		puts(	"error: could not open the books file");
+		delay(3000);
+		Librarian_home();
+	}
+	else
+	{
+		
+	while(!feof(fb))
+	{
+		struct Book book;
+		int result = fread(&book, sizeof(struct Book), 1, fb);
+		if (result != 0 && book.book_id != 0 && book.book_id == t) 
+		{
+		
+		  getdata();
+		}
+		
+	}
+	
+	}
+	fclose(fb);
 		return 1; // for non exixting book
 } 
 
@@ -288,12 +316,13 @@ int getdata(){
 	
 	system("color 6D");
 	printf("\t Enter the data for the following\n");
-	printf("\t\t Category");
-	printf("\t %cchoice\n",Categories[choice-1]); // there is a problem here solve it!
-	printf("\t\t Book ID :");
+	printf("\t\t Category\tChoice");
+ // there is a problem here solve it!
+	printf("\n\t\t Section:\t%s",Categories[choice-1]);
+	printf("\n\t\t Book ID :\t");
 	scanf("%d",&t);
 	
-	if(checkbook_id==0){
+	if(checkbook_id(t) ==0 ){
 		printf("\t\a The Book ID already exist\a\n ");
 		getch();
 		Librarian_home();
@@ -301,13 +330,13 @@ int getdata(){
 	
 	//  THis function has got strict usage based on declaration in struc Book. Be Keen.
 	sample.book_id = t;
-	printf("\t\t Book Title : ");
-	scanf("%s",&sample.Title);
-	printf("\t\t Author : ");
-	scanf("%s",&sample.Author);
-	printf("\t\t Quantity : ");
+	printf("\t\t Book Title :\t ");
+	scanf("%s",sample.Title);
+	printf("\t\t Author :\t ");
+	scanf("%s",sample.Author);
+	printf("\t\t Quantity :\t ");
 	scanf("%d",&sample.quantity);
-	printf("\t\t Rack No : ");
+	printf("\t\t Rack No :\t ");
 	scanf("%d",&sample.rack_no);
 	
 	return 1;
@@ -317,23 +346,40 @@ int getdata(){
 void viewbooks(void){
 	system("cls");
 	system("color AA");
-	int i=0;
+//	int i=0;
 	
 	printf("\n\n\n\t\t\t     Books List         \n ");
-	printf( "\t\t CATEGORY	BOOK ID	  TITLE   AUTHOR  QUANTITY  RACK NO \n"); // improve this part for viewing
+	printf( "\t\t CATEGORY\tBOOK ID\tTITLE\tAUTHOR\tQUANTITY\tRACK NO \n"); // improve this part for viewing
 	
-	fb = fopen("books.dat", "rb");
-	while(fread(&sample,sizeof(sample),1,fb)==1){
+	fb = fopen("books.dat", "rb+");
+//	while(fread(&sample,sizeof(sample),1,fb)==1){
+if(fb == NULL)
+{
+	puts("Error: Could not open the files");
+}
+else
+{
+	
+
+	while(!feof(fb))
+	{
+		struct Book book;
+		int result = fread(&book, sizeof(struct Book), 1, fb);
+		if(result != 0 && book.book_id != 0)
+		{
+			printf( "\t\t %s	%d	  %s	  %s	  %d	     %d\n", book.Category, book.book_id, book.Title,book.Author, book.quantity,book.rack_no);
+		}
+	}
 		
 		// improve this printf code make the view output nice
-		
+delay(3000);		
 		// Ensure there is output without the use address ... cooked!! 
-		printf("\t\t %s	%d	  %s	  %s	  %d	     %d\n", sample.Category, sample.book_id, sample.Title,sample.Author, sample.quantity,sample.rack_no);
 		
-		i=i + sample.quantity;
-	}
+}
+//		i=i + sample.quantity;
+//	}
 	
-	printf("\t\t\t\t\t Total Books = %d",i);
+//	printf("\t\t\t\t\t Total Books = %d",i);
 	fclose(fb); 
 	returnfunc();
 
@@ -435,7 +481,7 @@ void deletebooks(void){
 
 /*Function  for searching books*/
 /*Can Search all others except the 1st output in view--bcoz it is initialized by memory*/
-void searchbooks(){
+void searchbooks(void){
 	system("cls");
 	system("color 3F");
 	
@@ -470,7 +516,9 @@ void searchbooks(){
 					returnfunc();
 				}
 				
-			/*	else
+		
+				
+		    	/*	else
 				{
 				printf("\t\t No Record found\n");
 				printf("\v\t Retry?(Y/N)");
@@ -479,8 +527,8 @@ void searchbooks(){
 				    searchbooks();
 				
 				    else
-				    Librarian_home();
-			}*/
+				    Librarian_home();*/
+			}
 			
 			// trying if the record entered is in the loop or not
 			if(findbook != 't'){
@@ -544,7 +592,7 @@ void editbooks(){
 	system("color 6B");
 	
 	int c=0;
-	int d, e;
+	int d;
 	
 	printf("\t\t Edit Book Section\n");
 	char another ='y';
@@ -561,11 +609,11 @@ void editbooks(){
 				printf("\t\t New Book ID :");
 				scanf("%d",&sample.book_id);
 				printf("\t\t New Category: ");
-				scanf("%s",&sample.Category);
+				scanf("%s",sample.Category);
 				printf("\t\t New Title: ");
-				scanf("%s",&sample.Title);
+				scanf("%s",sample.Title);
 				printf("\t\t New Author: ");
-				scanf("%s",&sample.Author);
+				scanf("%s",sample.Author);
 				printf("\t\t New Quantity: ");
 				scanf("%d",&sample.quantity);
 				printf("\t\t New Rack No. : ");
@@ -596,7 +644,7 @@ void editbooks(){
  good initially*/
  
  // Information about the books issued
- void issued_record(){
+ void issued_record(void){
 	system("cls");
 	printf("\n\n\t\t The Book has been taken by %s\n",sample.stud_issued);
 	printf("\t\t Issued Date:%d-%d-%d\n",sample.issued_date.day,sample.issued_date.month,sample.issued_date.year);
@@ -607,7 +655,8 @@ void issuebooks(void){
 	system("cls");
 	system("color 8F");
 	
-	int t, d;
+	int t;
+	int d;
 	printf("\n\t\t\t Issue Book Section\n");
 	printf("\t\t 1. Issue a Book\n");
 	printf("\t\t 2. View Issued Book\n");
@@ -718,7 +767,7 @@ void issuebooks(void){
 			   	printf("\t\t No record Found \n");
 			   }
 			   
-			   printf("\t\t Search Another Book?(Y/N)");
+			   printf("\t\t Search Another Book?(Y/N) ");
 			   another = getch();
 			 }
 			
@@ -731,7 +780,8 @@ void issuebooks(void){
 			FILE *ft; // temporary file for deleting
 			char another ='y';
 			while(another=='y'){
-				printf("\t\t Enter the Book ID to remove:");
+				system("cls");
+				printf("\n\t\t Enter the Book ID to remove:");
 				scanf("%d",&b);
 				fg = fopen("issue.dat", "rb+");
 				while(fread(&sample, sizeof(sample),1,fg)==1){
@@ -760,15 +810,20 @@ void issuebooks(void){
 						}
 					}
 					
-					if(findbook != 't'){
+					if(findbook != 't')//else
+					{
+						
 						printf("\n\t\t No record Found\n");
 					}
+					
 				}
 				
-				printf("\n\t\t Delete Another?(Y/N)");
-				another = getch();
+			printf("\n\t\t Delete Another?(Y/N)");
+			another = getch();
 				
 			} 
+			/*printf("\n\t\t Delete Another?(Y/N)");
+			another = getch();*/
 			break;
 		}
 		
@@ -785,3 +840,4 @@ void issuebooks(void){
 	returnfunc();
 } 
 
+/*  Note: Addbooks, and Updatebooks are somehow ok:   Things to Work On:    1. View Function  2. Search Function.*/
