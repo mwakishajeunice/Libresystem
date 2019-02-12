@@ -5,7 +5,6 @@
 #include <conio.h>
 #include <ctype.h>
 #include <dos.h>
-#include <wchar.h>
 
 #define RETURNTIME 15
 
@@ -130,14 +129,19 @@ void Librarian_password(){
 //for hiding the password in Asterik
 //Improvise the password code!
 
-	for(i=0;i<8;i++){
+	/* code */
+		
+
+for(i=0;i<8;i++){
 		ch = getch();
 		pass[i] =ch;
 		ch ='*';
 		
 		printf("%c",ch);
-		
-	}
+
+			}	
+
+
 	
 	pass[i] = '\0';
 	
@@ -295,19 +299,26 @@ int checkbook_id(int t){
 		
 	while(!feof(fb))
 	{
-		struct Book book;
-		int result = fread(&book, sizeof(struct Book), 1, fb);
-		if (result != 0 && book.book_id != 0 && book.book_id == t) 
-		{
+		while(fread(&sample,sizeof(sample),1,fb)==1)
+			if (sample.book_id==t) {
+				return 0;/* code */
+			}
+			
+			
+		// struct Book book;
+		// int result = fread(&book, sizeof(struct Book), 1, fb);
+		// if (result != 0 && book.book_id != 0 && book.book_id == t) 
+		// {
 		
-		  getdata();
-		}
+		//   getdata();
+		// }
 		
 	}
 	
 	}
+	return 1;
 	fclose(fb);
-		return 1; // for non exixting book
+	 // for non exixting book
 } 
 
 // function for getdata
@@ -326,6 +337,7 @@ int getdata(){
 		printf("\t\a The Book ID already exist\a\n ");
 		getch();
 		Librarian_home();
+		return 0;
 	}
 	
 	//  THis function has got strict usage based on declaration in struc Book. Be Keen.
@@ -533,7 +545,7 @@ void searchbooks(void){
 			// trying if the record entered is in the loop or not
 			if(findbook != 't'){
 				printf("\t\t No Record found\n");
-				printf("\v\t Retry?(Y/N)");
+				printf("\t\t Retry?(Y/N)");
 				
 				if(getch()=='y')
 				searchbooks();
@@ -591,7 +603,6 @@ void editbooks(){
 	system("cls");
 	system("color 6B");
 	
-	int c=0;
 	int d;
 	
 	printf("\t\t Edit Book Section\n");
@@ -602,6 +613,17 @@ void editbooks(){
 		scanf("%d",&d);
 		
 		fb = fopen("books.dat", "rb+"); // try wb+
+		if (fb == NULL) {
+			puts("Error! Could not open the file.\n");
+			delay(3000);
+			editbooks();
+			/* code */
+		}
+		else
+		{
+			/* code */
+		
+		
 		while(fread(&sample,sizeof(sample),1,fb)==1){
 			
 			if(checkbook_id(d)==0){
@@ -624,14 +646,18 @@ void editbooks(){
 				fwrite(&sample,sizeof(sample),1,fb);
 				fclose(fb);
 				
-				c=1;
+				
 			}
 			
-			if(c==0){
+			else{
 				printf("\t\t No Record Found\n");
+				delay(3000);
+				editbooks();
 			}
 		}
-		
+
+		}
+
 		printf("\t\t Update another Record?(Y/N): ");
 		fflush(stdin);
 		another=getch();
@@ -669,7 +695,7 @@ void issuebooks(void){
 		case 1:{// issue book
 			system("cls");
 			
-			int c=0;
+			
 			char another = 'y';
 			while(another == 'y'){
 				system("cls");
@@ -708,11 +734,13 @@ void issuebooks(void){
 					fseek(fg, sizeof(sample),SEEK_END);
 					fwrite(&sample,sizeof(sample),1,fg);
 					fclose(fg);
-					c=1;
+					
 					
 				}
-				if(c==0){
+				else{
 					printf("\n\t\t No Record Found\n");
+					delay(3000);
+					issuebooks();
 				}
 				
 				printf("\n\t\t Issue More Book?(Y/N)");
@@ -746,6 +774,7 @@ void issuebooks(void){
 		     system("cls");
 		     printf("\n\t\t Enter The Book ID: ");
 		     
+				 
 		     int p, c=0;
 		     char another = 'y';
 		     while(another=='y'){
@@ -757,19 +786,29 @@ void issuebooks(void){
 		     			printf("\n\t\tPress any Key To Continue...");
 		     			getch();
 		     			issued_record();
-		     			c=1;
+							c=0; 
+		     			
 					 }
+
 				 }
+
+				 if (c==1){
+			   	   printf("\t\t No record Found \n");
+					   delay(3000);
+					   issuebooks();
+					  
+			   }
+				 
+
+				 
 			   fflush(stdin);
 			   fclose(fg);
 			   
-			   if(c==0){
-			   	printf("\t\t No record Found \n");
-			   }
 			   
+				 
 			   printf("\t\t Search Another Book?(Y/N) ");
 			   another = getch();
-			 }
+				 }	 
 			
 			break;
 		}
@@ -784,6 +823,14 @@ void issuebooks(void){
 				printf("\n\t\t Enter the Book ID to remove:");
 				scanf("%d",&b);
 				fg = fopen("issue.dat", "rb+");
+				if(fb==NULL){
+					puts("Cannot open the file\n");
+				}
+				else
+				{
+					/* code */
+				
+				
 				while(fread(&sample, sizeof(sample),1,fg)==1){
 					if(sample.book_id==b){
 						issued_record();
@@ -822,6 +869,8 @@ void issuebooks(void){
 			another = getch();
 				
 			} 
+
+			}
 			/*printf("\n\t\t Delete Another?(Y/N)");
 			another = getch();*/
 			break;
