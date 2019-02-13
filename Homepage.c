@@ -355,7 +355,8 @@ int getdata(){
 }
 
 //function for viewing books
-void viewbooks(void){
+void viewbooks(void)
+{
 	system("cls");
 	system("color AA");
 //	int i=0;
@@ -383,19 +384,19 @@ else
 		}
 	}
 		
+}
+	fclose(fb); 
+	delay(3000);		
+	// returnfunc();
+}
 		// improve this printf code make the view output nice
-delay(3000);		
 		// Ensure there is output without the use address ... cooked!! 
 		
-}
 //		i=i + sample.quantity;
 //	}
 	
 //	printf("\t\t\t\t\t Total Books = %d",i);
-	fclose(fb); 
-	returnfunc();
 
-}
 
 //function for returning back Librarian_home
 void returnfunc(void){
@@ -823,15 +824,16 @@ void issuebooks(void){
 				printf("\n\t\t Enter the Book ID to remove:");
 				scanf("%d",&b);
 				fg = fopen("issue.dat", "rb+");
-				if(fb==NULL){
+				if(fg==NULL){
 					puts("Cannot open the file\n");
+					delay(3000);
 				}
 				else
 				{
 					/* code */
 				
 				
-				while(fread(&sample, sizeof(sample),1,fg)==1){
+				while(!feof(fg) && fread(&sample, sizeof(sample),1,fg)==1){
 					if(sample.book_id==b){
 						issued_record();
 						findbook = 't';
@@ -840,7 +842,10 @@ void issuebooks(void){
 					if(findbook =='t'){
 						printf("\t\t Do you want to Delete it?(Y/N)");
 						if(getch()=='y'){
-							ft = fopen("record.dat", "wba");
+							ft = fopen("record.dat", "ab+");
+							
+							if(ft!=NULL  && !feof(ft)){
+
 							rewind(fg);
 							while(fread(&sample, sizeof(sample),1,fg)==1){
 								if(sample.book_id !=b){
@@ -848,19 +853,29 @@ void issuebooks(void){
 									fwrite(&sample, sizeof(sample),1,ft);
 								}
 							}
-							
-							fclose(fg);
+
+							}
+							else{
+								puts("Cannot open writing file");
+								delay(3000);
+								issuebooks();
+							}
+
+							//plecse
+							printf("\n\t\t The Issued Book Is removed from the List\n");
+						}
+						fclose(fg);
 							fclose(ft);
 							remove("issue.dat");
 							rename("record.dat", "issue.dat");
-							printf("\n\t\t The Issued Book Is removed from the List\n");
-						}
 					}
 					
 					if(findbook != 't')//else
 					{
 						
 						printf("\n\t\t No record Found\n");
+						delay(3000);
+						issuebooks();
 					}
 					
 				}
