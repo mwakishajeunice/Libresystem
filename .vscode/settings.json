@@ -1,0 +1,10 @@
+{
+    "C_Cpp.intelliSenseEngineFallback": "Enabled",
+    "terminal.integrated.shell.windows": "C:\\msys64\\usr\\bin\\bash.exe",
+    "terminal.integrated.shellArgs.windows": ["-i"],
+    // "terminal.integrated.env.windows": { "PATH" : "/mingw64/bin:/usr/local/bin:/c/Windows/System32:/c/Windows/System32/WindowsPowerShell/v1.0/"}
+    "terminal.integrated.env.windows": {
+        "PATH": "/mingw64/bin:/Users/user/AppData/Roaming/Microsoft/Windows/StartMenu/Programs/WindowsPowerShell/v1.0/"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}
