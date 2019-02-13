@@ -72,7 +72,7 @@ struct Book{
 
 struct Book sample;
 
-int main(int argc, char *argv[]) {
+int main(void) {
 	
 	home();
 	
@@ -357,45 +357,75 @@ int getdata(){
 //function for viewing books
 void viewbooks(void)
 {
+	
 	system("cls");
-	system("color AA");
-//	int i=0;
+	system("color A7");
+	//int i=0;
 	
-	printf("\n\n\n\t\t\t     Books List         \n ");
-	printf( "\t\t CATEGORY\tBOOK ID\tTITLE\tAUTHOR\tQUANTITY\tRACK NO \n"); // improve this part for viewing
+	 // improve this part for viewing
 	
-	fb = fopen("books.dat", "rb+");
-//	while(fread(&sample,sizeof(sample),1,fb)==1){
-if(fb == NULL)
-{
-	puts("Error: Could not open the files");
+	if ((fb = fopen("books.dat", "rb+")) ==NULL) {
+		puts("cannot open file");
+		/* code */
+	}
+	else
+	{	
+		
+
+		printf("\n\n\n\t\t\t     Books List         \n ");
+	  printf( "\t\t CATEGORY\tBOOK ID\t\tTITLE\tAUTHOR\tQUANTITY\tRACK NO \n");
+	
+		while(!feof(fb)){
+			struct Book book;
+			
+			
+			int result = fread(&book,sizeof(struct Book),1,fb);
+			if(result !=0){
+				printf( "\n\t\t %s	%d	  %s	  %s	  %d	   %d\n", book.Category, book.book_id, book.Title,book.Author, book.quantity,book.rack_no);
+			}
+		}
+		
+	
+	}
+fclose(fb);
+delay(3000);		
+returnfunc();
+
 }
-else
-{
+//	while(fread(&sample,sizeof(sample),1,fb)==1){
+	// if(fb == NULL)
+	// {
+	// 	puts("Error: Could not open the files");
+	// }
+	
+	
+// 	else{
+
 	
 
-	while(!feof(fb))
-	{
-		struct Book book;
-		int result = fread(&book, sizeof(struct Book), 1, fb);
-		if(result != 0 && book.book_id != 0)
-		{
-			printf( "\t\t %s	%d	  %s	  %s	  %d	     %d\n", book.Category, book.book_id, book.Title,book.Author, book.quantity,book.rack_no);
-		}
-	}
+// 		while(!feof(fb))
+// 	{
+// 		//struct Book book;
 		
-}
-	fclose(fb); 
-	delay(3000);		
-	// returnfunc();
-}
+// 			while(fread(&sample, sizeof(sample), 1, fb)==1)
+// 			{
+// 				printf( "\n\t\t %s\t	%d\t\t	  %s\t	  %s	\t  %d	 \t    %d\n", sample.Category, sample.book_id, sample.Title,sample.Author, sample.quantity,sample.rack_no);
+// 			}
+// 		}
+	
+// }
+  
+	// i=i + sample.quantity;
+	// printf("\t\t\t\t\t Total Books = %d",i);
+	//fclose(fb); 
+
 		// improve this printf code make the view output nice
 		// Ensure there is output without the use address ... cooked!! 
 		
-//		i=i + sample.quantity;
+//		
 //	}
 	
-//	printf("\t\t\t\t\t Total Books = %d",i);
+//	
 
 
 //function for returning back Librarian_home
@@ -413,6 +443,22 @@ void returnfunc(void){
 /*Key bugs: Deleting as a group, Deleting a non-existing Value after immediate delete of existing value, The 1st output in View cannot be deleted maybe bcoz-- 
 use of address in view*/
 // function for deleting books from the record 
+
+
+// void viewbooks(void){
+// 	 system("cls");
+// 	 system("color A5");
+
+// 	 if((fb =fopen("books.dat", "rb"))==NULL){
+// 		 puts("Could not open the file");
+// 	 }
+
+// 	 else
+// 	 {
+// 		 printf("%-6")
+// 	 }
+	 
+// }
 
 void deletebooks(void){
 	system("cls");
@@ -469,14 +515,14 @@ void deletebooks(void){
 				fclose(fb);
 				remove("books.dat");
 				rename("test.dat","books.dat"); // copy books.dat to test.dat except data we want to delete
-				fb= fopen("books.dat", "rb+");
+				//fb= fopen("books.dat", "rb+");
 				
 				if(findbook == 't'){
 					printf("\t\t Successful delete\n");
 					printf("\t\t Delete Another? (Y/N)  "); // improve the delete function to be real time. Deleteing multiple files
 					
 				}
-				fclose(fb); //  can add it anywhere it helps
+				//fclose(fb); //  can add it anywhere it helps
 				
 			}
 			
@@ -486,6 +532,7 @@ void deletebooks(void){
 			another = getch();
 			
 		}
+		
 		
 	}
 	
