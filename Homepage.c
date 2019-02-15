@@ -13,8 +13,8 @@
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 char Categories[][15] ={"Engineering" , "Education", "Philosophy" , "Medicine",  "Food Science", "Sciences"};
 
-//pointers of global files
-FILE *fb,*fd,*fg;
+//pointers of global filesg
+FILE *fb=NULL,*fd=NULL,*fg=NULL;
 
 
 //list of function prototypes used in the system
@@ -249,7 +249,7 @@ void addbooks(void){
 	}
 	
 	system("cls");
-	fb =fopen("books.dat", "ab+");
+	fb =fopen("books.dat", "a+");
   if (fb==NULL) {
 	   printf("\n\t Failed to open books.dat\n");
 		 delay(3000);
@@ -355,43 +355,85 @@ int getdata(){
 }
 
 //function for viewing books
+
+
+
+
 void viewbooks(void)
 {
-	
-	system("cls");
-	system("color A7");
-	//int i=0;
-	
-	 // improve this part for viewing
-	
-	if ((fb = fopen("books.dat", "rb+")) ==NULL) {
-		puts("cannot open file");
-		/* code */
+  system("clear");
+  FILE *vb=NULL;  
+  vb = fopen("books.dat", "rb+");
+	if (vb == NULL)
+	{
+		puts("Error opening the file");
+
 	}
 	else
-	{	
-		
+	{     
+		    system("cls");
+        puts("\t\t\t*********************** BOOK LIST **************************************");
+        puts("\n\n\t\t\t**********************************************************************");
+        puts("\t\t\t**********************************************************************\n");
 
-		printf("\n\n\n\t\t\t     Books List         \n ");
-	  printf( "\t\t CATEGORY\tBOOK ID\t\tTITLE\tAUTHOR\tQUANTITY\tRACK NO \n");
-	
-		while(!feof(fb)){
-			struct Book book;
-			
-			
-			int result = fread(&book,sizeof(struct Book),1,fb);
-			if(result !=0){
-				printf( "\n\t\t %s	%d	  %s	  %s	  %d	   %d\n", book.Category, book.book_id, book.Title,book.Author, book.quantity,book.rack_no);
-			}
-		}
-		
-	
-	}
-fclose(fb);
-delay(3000);		
-returnfunc();
-
+        printf("\t\t\t%6s %6s %6s %14s %23s\n", "BOOK ID","QUANTITY", "RACK No.","TITLE", "AUTHOR");
+      
+        while(!feof(vb))
+        {   
+	        int results=fread(&sample,sizeof(sample),1,vb);
+            if (results!=0)
+            {
+                printf("\t\t\t %6d %6d %6d \t%16s \t%16s\n",sample.book_id,sample.quantity,sample.rack_no,sample.Title,sample.Author);
+            }
+            
+        }
+        puts("\n\t\t\t************************************************************************");
+        puts("\t\t\t**************************************************************************");
+        
+    }
+   
+    fclose(vb);
+		returnfunc();
 }
+
+
+
+
+// void viewbooks(void)
+// {
+	
+// 	system("cls");
+// 	system("color A7");
+// 	//int i=0;
+	
+// 	 // improve this part for viewing
+	
+//  if((fb = fopen("books.dat", "rb"))==NULL)
+// 	 {
+// 		puts("cannot open file");
+// 		/* code */
+// 	}
+// 	else
+// 	{	
+		
+
+// 		printf("\n\n\n\t\t\t     Books List         \n ");
+// 	  printf( "\t\t CATEGORY\tBOOK ID\t\tTITLE\tAUTHOR\tQUANTITY\tRACK NO \n");
+	  
+// 		while(fread(&sample,sizeof(sample),1,fb)==1){
+		   
+// 				printf( "\n\t\t 	%d	  %s	  %s	  %d	   %d\n", sample.book_id,sample.Title,sample.Author, sample.quantity,sample.rack_no);
+// 			fclose(fb);
+// 		}
+// 	}
+		
+
+// delay(3000);		
+// returnfunc();
+	
+//	}
+
+
 //	while(fread(&sample,sizeof(sample),1,fb)==1){
 	// if(fb == NULL)
 	// {
@@ -479,7 +521,7 @@ void deletebooks(void){
 			//finding if the user input matches book id in the system 
 			if(sample.book_id==BookId){
 				printf("\t\t The Books Record is available\n");
-				printf("\t\t Category :%s ", sample.Category); // until u add address it doesn't give books details
+				// until u add address it doesn't give books details
 				printf("\t The Book Title :%s ",sample.Title);
 				printf("\t The Book Rack No :%d",sample.rack_no);
 				
@@ -497,7 +539,7 @@ void deletebooks(void){
 		}
 	
 		
-	   if(findbook == 't'){
+	  if(findbook == 't'){
 			printf("\t\t Delete? (Y/N): ");
 			
 			if(getch()== 'y'){
@@ -519,7 +561,9 @@ void deletebooks(void){
 				
 				if(findbook == 't'){
 					printf("\t\t Successful delete\n");
-					printf("\t\t Delete Another? (Y/N)  "); // improve the delete function to be real time. Deleteing multiple files
+					printf("\t\t Delete Another? (Y/N)  ");
+					//another = getch();
+					 // improve the delete function to be real time. Deleteing multiple files
 					
 				}
 				//fclose(fb); //  can add it anywhere it helps
@@ -566,7 +610,7 @@ void searchbooks(void){
 				if(sample.book_id==d){
 					system("cls");
 					printf("\t\t Book Available\n");
-					printf("\t\t Category %s\n", sample.Category);
+					//printf("\t\t Category %s\n", sample.Category);
 					printf("\t\t Title: %s\n", sample.Title);
 					printf("\t\t ID : %d\n", sample.book_id);
 					printf("\t\t Quantity :%d\n",sample.quantity);
@@ -616,7 +660,7 @@ void searchbooks(void){
 			while(fread(&sample,sizeof(sample),1,fb)==1){
 				if(strcmp(sample.Title,(s))==0){ // whether name entered as s is == book's name or not
 					printf("\t\t Book Available\n");
-					printf("\t\t Category :%s\n",sample.Category);
+				//	printf("\t\t Category :%s\n",sample.Category);
 					printf("\t\t Title: %s\n",sample.Title);
 					printf("\t\t ID : %d\n", sample.book_id);
 					printf("\t\t Author : %s\n", sample.Author);
@@ -678,8 +722,8 @@ void editbooks(){
 				printf("\t\t The Book Exists\n");
 				printf("\t\t New Book ID :");
 				scanf("%d",&sample.book_id);
-				printf("\t\t New Category: ");
-				scanf("%s",sample.Category);
+				//printf("\t\t New Category: ");
+				//scanf("%s",sample.Category);
 				printf("\t\t New Title: ");
 				scanf("%s",sample.Title);
 				printf("\t\t New Author: ");
@@ -801,18 +845,29 @@ void issuebooks(void){
 		
 		case 2:{ // showing issued book
 			system("cls");
-			int j=4;
 			
-			printf("\n\t\t\t Issued Book List\n");
-			printf("\n\t\t STUDENT NAME   CATEGORY   BOOK ID   BOOK TITLE  ISSUED DATE  RETURN DATE  \n");
+			
+		
+			puts("\t\t\t**************************ISSUED BOOK LIST **************************************");
+      puts("\t\t\t*********************************************************************************");
+      puts("\t\t\t**********************************************************************************");
+
+      printf("\t\t\t%6s %10s  %7s %14s  %18s\n", "NAMES","BOOK ID","TITLE","ISSUED DATE", "RETURN DATE");
+      
 			
 			fg = fopen("issue.dat", "rb");
-			while(fread(&sample,sizeof(sample),1,fg)==1){
-				printf("\n\t\t %s  %s  %d   %s   %d-%d-%d   %d-%d-%d\n", sample.stud_issued, sample.Category, sample.book_id, sample.Title, sample.issued_date.day,sample.issued_date.month,sample.issued_date.year,sample.duedate.day,sample.duedate.month,sample.duedate.year);
+			 
+			 
+			 while(fread(&sample,sizeof(sample),1,fg)==1){
+				printf("\t\t\t %6s  %6d   %6s   %5d-%d-%d   %5d-%d-%d\n", sample.stud_issued, sample.book_id, sample.Title, sample.issued_date.day,sample.issued_date.month,sample.issued_date.year,sample.duedate.day,sample.duedate.month,sample.duedate.year);
 				
-				j++;
-	
+				
+	    
 			}
+		puts("\t\t\t***********************************************************************************");
+    puts("\t\t\t***********************************************************************************");
+        
+			 
 			fclose(fg);
 			returnfunc();
 			break;
@@ -864,7 +919,7 @@ void issuebooks(void){
 		case 4:{// remove issued book from the record
 		    system("cls");
 			int b;
-			FILE *ft; // temporary file for deleting
+			FILE *ft=NULL; // temporary file for deleting
 			char another ='y';
 			while(another=='y'){
 				system("cls");
