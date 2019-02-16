@@ -6,15 +6,6 @@
 #include <conio.h>
 
 
-
-
-
-
-
-
-
-
-
  char categories [][17] = {"mathematics","computer","Education","Psychology","Medicine","engineering"};
 
 void mainmenu(void) //displays main menu of this project
