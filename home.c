@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <unistd.h> // use #include <windows.h> for windows
-//where getc(stdin) replace with getch() for window & system("clear") replace with system("cls")
+#include <windows.h> // use #include <unistd.h> for ubuntu
+//where getc(stdin) replace with getch() for window & system("cls") replace with system("clear")
 //pointers of global files
 FILE *fb=NULL,*fd=NULL,*fg=NULL;
 //list of function prototypes used in the system
@@ -41,18 +41,18 @@ struct Book
 	int rack_no;	
 };
 struct Book sample;
-//exit function for Exiting pages
+//E function for Eing pages
 void Exit(void)
 {
 	int i;
 	for(i = 3;i>0; i--)
 	{
 		puts("pleas Wait...");
-		sleep(1);
+		//
 		printf("%d:-->",i);
-		system("clear");
+		system("cls");
 	}
-	puts("You have succesfully exited");	
+	puts("You have succesfully existed");	
 }
 int main(void)
 	{
@@ -73,7 +73,8 @@ void searchbook()
     FILE *fp;
     int Book_id,a;
     char Book_title[16];
-    system("cls"); // use system("cls") for windows
+    system("cls"); // use system("clear") for ubuntu
+    system("color A0");
     
    
     fp = fopen("booksinfoss.dat", "r");
@@ -83,12 +84,12 @@ void searchbook()
     {   
         puts("\t\t*************************** Search Book ******************************");
         puts("\tsearch by:---> 1.Book Id \t\t---> 2.Book Title \t\t---> 3.Exit");
-        printf("Enter your choice:");
+        printf("Enter your choice :");
         scanf("%d",&a);
         struct Book sample;
         if (a == 1)
         {
-                    printf("\t\tEnter book id:");
+                    printf("\t\tEnter book id :");
                     scanf("%d",&Book_id);
                     while(!feof(fp))
                     {
@@ -96,7 +97,7 @@ void searchbook()
                         if(results!=0 && Book_id==sample.book_id && sample.book_id!=0)
                         {
                             printf("\n\t\tThe Book Exists\n");
-                            sleep(1);
+                             
                             printf("\t\t\t%6s %6s %6s %10s %10s\n", "Book Id","Quantity", "Rack No.","Title", "Author");
                             printf("\t\t\t%6d %6d %6d \t%13s \t%s\n",sample.book_id,sample.quantity,sample.rack_no,sample.Title,sample.Author);
                         }
@@ -115,7 +116,7 @@ void searchbook()
                         if(results!=0 && strcmp(Book_title,sample.Title)==0)
                         {
                             printf("\n\t\tThe Book Exists\n");
-                            sleep(1);
+                            
                             printf("\t\t\t%6s %6s %6s %10s %10s\n", "Book Id","Quantity", "Rack No.","Title", "Author");
                             printf("\t\t\t%6d %6d %6d \t%13s \t%s\n",sample.book_id,sample.quantity,sample.rack_no,sample.Title,sample.Author);                     
                         }
@@ -125,7 +126,7 @@ void searchbook()
          }
         if (a==3)
         {
-          Exit();   
+          printf("existed");  
         }	
             
     }
@@ -136,6 +137,7 @@ void searchbook()
 void viewbooks(void)
 {
     system("cls");
+    system("color B1");
     FILE *fb;	
     fb = fopen("booksinfoss.dat", "rb+");
 	if (fb == NULL)
@@ -171,13 +173,14 @@ void viewbooks(void)
 void User_home(void)
 {
 		system("cls");
+        system("color 85");
 		int n;
 		puts("\n\n***************User Section********************\n");
 		puts("\n*************************************************\n");
 		puts("Select a task to perform from the list below:");
 		puts("\t-->1.Search Books\n");
 		puts("\t-->2.View Books\n");
-		puts("\t-->3.Exit\n");
+		puts("\t-->3.E\n");
 		puts("*************************************************");
 		printf("\nEnter Your Choice:");
 		scanf("%d",&n);
@@ -190,7 +193,7 @@ void User_home(void)
 			viewbooks();     //call viewbooks function
 			break;
 		case 3:
-			Exit(); //call exit function to exit
+			//E(); //call E function to E
 			break;	
 		default:
 			system("cls");
@@ -202,6 +205,7 @@ void User_home(void)
 void login(void)
 {
 	system("cls");//reserve for windows
+    system("color CF");
 	char username[25];
     char password[10];
     FILE *log;
@@ -258,17 +262,18 @@ void registration(void)
 		printf("Your username is:%s\n",a.username);
 	
 	
-	sleep(2);
+	
 	}
 	fclose(log);
  	login();    //call login function
 }
 int Users()
 {
-	system("clear");
+	system("cls");
+    system("color BD");
 	puts("\t############################## LIBRARY SYSTEM #################################");
     printf("\n\n\t\t\t-->Press 1. to REGISTER  \n\t\t\t-->Press 2. to LOGIN\n");
-	puts("\t\t\t-->Press 3. to Exit");
+	puts("\t\t\t-->Press 3. to E");
     int num;
 	printf("\n\n\t\tPlease enter what you wish to do:");
     scanf("%d",&num);
@@ -303,6 +308,7 @@ int Users()
 void home(void)
 {
 	system("cls");
+    system("color 0A");
 	// system("color 0A"); //for windows
 	puts("\t############################## LIBRARY SYSTEM #################################");
 	puts("\n\t\t\t\tPlease select your Category\n"); //prompts user to enter his/her Category i.e User or Admin
@@ -317,7 +323,6 @@ void home(void)
 		{
 			case 1:
 				Librarian_password();
-				
 				break;
 				
 			case 2:
@@ -367,7 +372,7 @@ void Librarian_password()
 	else{
 		system("cls");
 		printf("\n\t Incorrect Password! Try Again");
-		sleep(3); //works in linux use delay for windows1
+		
 		Librarian_password();
 		
 	}
@@ -387,7 +392,7 @@ void Librarian_home(void)
     printf("\n\t\t\t1.Add books\t\t2.Delete books\n");
     printf("\n\t\t\t3.Search books\t\t4.View books\n");
     printf("\n\t\t\t5.Issue books\t\t6.Edit book records\n");
-    printf("\n\t\t\t7.Return Books\t\t8.Exit Window\n");
+    printf("\n\t\t\t7.Return Books\t\t8.E Window\n");
     puts("\n\t\t***********************************************************");
 	puts("\t\t***********************************************************");
     printf("\t\t\tSelect your Choice:");
@@ -428,7 +433,7 @@ void Librarian_home(void)
 			system("cls");
 			
 			Exit();	
-			sleep(2);				
+							
 			main();
 			
 		}
@@ -446,7 +451,7 @@ void Librarian_home(void)
 //adding books
 void addbooks(void)
 {
-    system("clear");
+    system("cls");
     puts("\t********************** Add Books ********************");
     int n;
     FILE *fp;
@@ -471,7 +476,7 @@ void addbooks(void)
         printf("\n\tEnter Quantity:");
 		scanf("%d",&sample.quantity);
 		// fseek(fp,0,SEEK_END); // moving the file to the end allow appending of the next file
-        sleep(2);
+        
         fwrite(&sample, sizeof(struct Book),1 , fp);
         fclose(fp);
         puts("\n\tBook succesfully added");
@@ -533,7 +538,7 @@ void deletebooks(void)
 			if(results !=0 && sample.book_id==Book_Id && findbook=='n')
             {
 				printf("\t\t The Books Record is available\n");
-                sleep(1);
+                
 				printf("\n\t\t\t%6s %6s %6s %10s %10s\n", "Book Id","Quantity", "Rack No.","Title", "Author");
                 printf("\t\t\t%6d %6d %6d \t%13s \t%s\n",sample.book_id,sample.quantity,sample.rack_no,sample.Title,sample.Author);				
 				findbook = 'y';
@@ -545,13 +550,13 @@ void deletebooks(void)
 			//if no book of such id is found
             printf("\t\t No book of such Id exist");
             deletebooks();
-            sleep(2);
+            
 		}
         if (findbook =='y')
             {
                 puts("\t\t\tAre you true to delete?-->Press 1.[Yes] -->2.[No]");
 				printf("\t\t\tEnter your choice:");
-                sleep(1);
+                
                 scanf("%d",&option);
                 switch (option)
                 {
@@ -560,12 +565,12 @@ void deletebooks(void)
                         struct Book blank = {0,"","",0,0};
                         fseek(fp,(count-1)*sizeof(struct Book),SEEK_SET);
                         fwrite(&blank,sizeof(struct Book),1,fp);
-						sleep(2);
+						
 						Librarian_home();
                         break;
                     case 2:
 						puts("Please wait...");
-						sleep(1);
+						
                         Librarian_home();
                 
                     default:
@@ -606,7 +611,7 @@ void editbooks(void)
             if (results!=0 && Book_id==sample.book_id && option=='n')
             {
                 printf("\t\t The Books Record is available\n");
-                sleep(1);
+                
 				printf("\t\t\t%6s %6s %6s %10s %10s\n", "Book Id","Quantity", "Rack No.","Title", "Author");
                 printf("\t\t\t%6d %6d %6d \t%13s \t%s\n",sample.book_id,sample.quantity,sample.rack_no,sample.Title,sample.Author);				
 				option = 'y';
@@ -619,12 +624,12 @@ void editbooks(void)
                 //if no book of such id is found
             printf("\t\t No book of such Id exist");
             editbooks();
-            sleep(1);  
+              
             }
         if (option=='y')
         {
             puts("\t\t\tAre you true to edit-->Press 1.[Yes] -->2.[No]");
-            sleep(1);
+            
             scanf("%d",&choice);
             switch (choice)
             {
@@ -641,7 +646,7 @@ void editbooks(void)
                     printf("\n\tEnter New Quantity:");
                     scanf("%d",&sample.quantity);
                     // fseek(fp,0,SEEK_END); // moving the file to the end allow appending of the next file
-                    sleep(2);
+                    
                     fseek(fp,(count-1)*sizeof(struct Book),SEEK_SET);
                     fwrite(&sample, sizeof(struct Book),1 , fp);
                     fclose(fp);
@@ -660,7 +665,7 @@ void editbooks(void)
                     break;
                 case 2:
                 puts("Please wait...");
-                sleep(2);
+                
                 Librarian_home();
                 break; 
 				default:

@@ -28,6 +28,8 @@ void returnfunc(void);
 
 void Librarian_password(void);  
 void Librarian_home(void); 
+void User_home(void);
+void login(void);
 void addbooks(void);
 void searchbooks(void);
 void editbooks(void);
@@ -103,7 +105,6 @@ void home(void){
 			
 		case 2:
 			
-			
 			break;
 		
 		case 3:
@@ -116,7 +117,6 @@ void home(void){
 			home();
 	}
 }
-
 
 // Password for the Librarian to Log in
 
@@ -395,9 +395,74 @@ void viewbooks(void)
     fclose(vb);
 		returnfunc();
 }
+void User_home(void)
+{
+		system("cls");
+        system("color 85");
+		int n;
+		puts("\n\n***************User Section********************\n");
+		puts("\n*************************************************\n");
+		puts("Select a task to perform from the list below:");
+		puts("\t-->1.Search Books\n");
+		puts("\t-->2.View Books\n");
+		puts("\t-->3.E\n");
+		puts("*************************************************");
+		printf("\nEnter Your Choice:");
+		scanf("%d",&n);
+	switch (n)
+	{
+		case 1:
+			searchbook();  //call Search book functin
+			break;
+		case 2:
+			viewbooks();     //call viewbooks function
+			break;
+		case 3:
+			//E(); //call E function to E
+			break;	
+		default:
+			system("cls");
+			puts("INVALID CHOICE TRY AGAIN");
+			User_home();
+			break;
+	}
+}
 
+void login(void)
+{
+	system("cls");//reserve for windows
+    system("color CF");
+	char username[25];
+    char password[10];
+    FILE *log;
+	char correct = 'n';
+    log=fopen("loginss.dat","r+");//opening file for reading
+    printf("\nEnter your user name and password to login\n");
+    printf("\t\nUsername:");
+    scanf("%s",username);
+    printf("\t\nPassword:");
+    scanf("%s",password);
+    while(!feof(log) && correct == 'n')
+    {
 
+		struct login a;
+		int result = fread(&a, sizeof(struct login), 1, log);
+        if(result != 0 && strcmp(username,a.username) == 0 && strcmp(password,a.password) == 0)//compares if username and password matches those in login file
+        {
 
+            printf("Successful login!");
+            printf("\nWelcome! %s",username);
+			correct = 'y';
+            User_home();//User_home function
+        }
+    }
+    if(correct == 'n')
+        {
+            printf("Please Enter correct UserName and password");
+            login();
+        }
+    fclose(log);
+}
 
 // void viewbooks(void)
 // {
